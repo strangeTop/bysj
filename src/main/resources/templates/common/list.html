@@ -1,0 +1,33 @@
+<div class="fly-panel" style="margin-bottom: 0;">
+    <ul class="fly-list">
+        <li th:each="article :${articleList}">
+            <a class="fly-avatar">
+                <img th:src="'/img/'+${article.user.headPortrait}" th:alt="${article.user.nickname}">
+            </a>
+            <h2>
+                <a class="layui-badge" th:text="${article.articleType.arcTypeName}"></a>
+                <a th:href="@{'/article/detail/'+${article.articleId}}" target="_blank" th:utext="${article.name}"></a>
+            </h2>
+            <div class="fly-list-info">
+                <a>
+                    <cite th:text="${article.user.nickname}"></cite>
+                    <i th:if="${article.user.isVip == true}" class="iconfont icon-renzheng" title="认证信息：会员"></i>
+                    <i th:if="${article.user.isVip == true}" class="layui-badge fly-badge-vip" th:text="'VIP'+${article.user.vipGrade}">VIP</i>
+                </a>
+                <span th:text="${article.publishDate}"></span>
+                <span th:if="!${article.isFree}" class="fly-list-kiss layui-hide-xs" title="积分">
+                                <i class="iconfont icon-kiss"></i>
+                                <span th:text="${article.points}"></span>
+                            </span>
+                <span th:if="${article.isFree}" class="layui-badge fly-badge-accept layui-hide-xs">免费资源</span>
+                <span class="fly-list-nums">
+                                <i class="iconfont" title="人气">&#xe60b;</i> <span th:text="${article.click}"></span>
+                            </span>
+            </div>
+            <div class="fly-list-badge">
+                <span th:if="${article.isHot}" class="layui-badge layui-bg-red">热门</span>
+            </div>
+        </li>
+    </ul>
+    <div style="text-align: center;" th:utext="${pageStr}"></div>
+</div>

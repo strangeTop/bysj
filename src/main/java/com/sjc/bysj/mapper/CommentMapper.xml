@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjc.bysj.mapper.CommentMapper">
+    <resultMap id="commentMap" type="com.sjc.bysj.res.CommentRes">
+        <result column="comment_id" jdbcType="INTEGER" property="commentId"/>
+        <result column="comment_date" jdbcType="VARCHAR" property="commentDate"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="state" jdbcType="INTEGER" property="state"/>
+        <association property="user" javaType="com.sjc.bysj.entity.User">
+            <result column="nickname" jdbcType="VARCHAR" property="nickname"/>
+            <result column="head_portrait" jdbcType="VARCHAR" property="headPortrait"/>
+            <result column="vip_grade" jdbcType="INTEGER" property="vipGrade"/>
+            <result column="is_vip" jdbcType="BIT" property="isVip"/>
+        </association>
+        <association property="article" javaType="com.sjc.bysj.entity.Article">
+            <result column="user_id" jdbcType="INTEGER" property="userId"/>
+            <result column="article_id" jdbcType="INTEGER" property="articleId"/>
+            <result column="name" jdbcType="VARCHAR" property="name"/>
+        </association>
+    </resultMap>
+    <select id="list" resultMap="commentMap">
+        select
+        c.comment_id,
+        c.comment_date,
+        c.content,
+        c.state,
+        u.nickname,
+        u.head_portrait,
+        u.vip_grade,
+        u.is_vip,
+        a.user_id,
+        a.name,
+        a.article_id
+        from comment c join user u on c.user_id=u.user_id
+        join article a on c.article_id=a.article_id
+        <if test="articleId != null and articleId != ''">
+            where c.article_id=#{articleId} and c.state=1
+        </if>
+        <if test="order != null and order != '' and field != null and field != ''">
+            order by ${field} ${order}
+        </if>
+        <if test="order == null or order == '' or field == null or field == ''">
+            order by comment_date desc
+        </if>
+        limit #{page},#{pageSize}
+    </select>
+
+    <select id="count" resultType="Integer">
+        select count(1) from comment
+        <if test="articleId != null and articleId != ''">
+            where article_id=#{articleId} and state=1
+        </if>
+    </select>
+
+    <delete id="deleteByArticleId" parameterType="Integer">
+        delete from comment where article_id=#{articleId}
+    </delete>
+</mapper>

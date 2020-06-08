@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta content="text/html;charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta http-equiv ="Pragma" content = "no-cache"/>
+    <meta http-equiv="Cache-Control" content="no cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <script src="/fsLayui/scripts/pace.min.js"></script>
+    <link href="/fsLayui/css/pace-theme-flash.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/fsLayui/plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="/fsLayui/css/fs.css" media="all"/>
+    <script type="text/javascript" src="/fsLayui/plugins/layui/layui.js"></script>
+    <script type="text/javascript" src="/fsLayui/plugins/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/fsLayui/plugins/frame/js/fsDict.js?v=1.5.0"></script>
+    <script type="text/javascript" src="/fsLayui/plugins/frame/js/fs.js?v=1.5.0"></script>
+    <script type="text/javascript" src="/fsLayui/plugins/frame/js/frame.js?v=1.5.0"></script>
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space1">
+        <div class="layui-col-md12">
+            <div class="layui-form-query">
+                <form class="layui-form" id="query_form">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-mid">用户名：</label>
+                            <div class="layui-input-inline" style="width: 250px;">
+                                <input type="text" name="userName" autocomplete="off" class="layui-input"/>
+                            </div>
+                        </div>
+
+
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <button class="layui-btn" type="button" function="query"><i class="layui-icon">&#xe615;</i>查询</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="layui-col-md12">
+            <div class="layui-row grid-demo">
+                <div class="layui-col-md3">
+                    <button class="layui-btn" function="refresh"><i class="layui-icon">&#x1002;</i>刷新</button>
+                </div>
+                <div class="layui-col-md12">
+                    <table id="fsDatagrid" lay-filter="fsDatagrid" class="fsDatagrid" isLoad="1" url="/admin/user/list" isPage="1" defaultForm="query_form" height="full-135"></table>
+                    <div class="fsDatagridCols">
+                        <p type="numbers" title="#"/>
+                        <p field="user" title="昵称（用户名）" width="300" templet="#userTpl"/>
+                        <p field="sex" title="性别" width="60" align="center" templet="#sexTpl"  />
+                        <p field="points" title="积分" width="90" align="center" templet="#pointsTpl"  />
+                        <p field="email" title="邮箱" width="220" align="center" />
+                        <p field="latelyLoginTime" title="最近登录" width="180" align="center"/>
+                        <p field="isVip" title="VIP会员" width="140" align="center" templet="#isVipTpl"  />
+                        <p field="isOff" title="封禁" width="100" align="center" templet="#isOffTpl"  />
+                        <p fixed="right" align="center" toolbar="#barDemo" title="操作"/>
+                    </div>
+                    <script type="text/html" id="userTpl">
+                        <img src="/img/{{d.headPortrait}}" class="layui-nav-img" />{{d.nickname}}({{d.userName}})
+                    </script>
+                    <script type="text/html" id="sexTpl">
+                        {{# if(d.sex == '女'){ }}
+                        <span class="layui-badge layui-bg-green">女</span>
+                        {{# }else if(d.sex == '男'){   }}
+                        <span class="layui-badge layui-bg-red">男</span>
+                        {{# } }}
+                    </script>
+                    <script type="text/html" id="pointsTpl">
+                        {{d.points}} 积分
+                    </script>
+                    <script type="text/html" id="isVipTpl">
+                        <input type="checkbox" name="isVip" value="{{d.userId}}" lay-skin="switch" lay-text="是|否" lay-filter="isVip"  {{d.isVip == true?'checked':''}}>
+                        {{# if(d.isVip == true){ }}
+                            <span class="layui-badge layui-bg-orange">{{d.vipGrade}}</span>
+                        {{# }    }}
+                    </script>
+                    <script type="text/html" id="isOffTpl">
+                        <input type="checkbox" name="isOff" value="{{d.userId}}" lay-skin="switch" lay-text="是|否" lay-filter="isOff"  {{d.isOff == true?'checked':''}}>
+                    </script>
+                    <script type="text/html" id="barDemo">
+                        <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="submit" url="/admin/user/resetPassword" isConfirm="1" confirmMsg="您确定要对用户进行重置密码吗？"
+                           inputs="userId:"><i class="layui-icon">&#xe642;</i>重置密码</a>
+                        <a class="layui-btn layui-bg-red layui-btn-xs" lay-event="top" topUrl="/admin/user/vipGrade.html" topMode="add"
+                            topWidth="400px" topHeight="200px" topTitle="修改VIP等级" inputs="userId:"><i class="layui-icon">&#xe642;</i>VIP等级</a>
+                        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="top" topUrl="/admin/user/one.html" topMode="add"
+                           topWidth="400px" topHeight="200px" topTitle="积分充值" inputs="userId:"><i class="layui-icon">&#xe642;</i>积分充值</a>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    layui.use('table',function () {
+        var table = layui.table,form = layui.form;
+
+        //监听vip操作
+        form.on('switch(isVip)',function (obj) {
+           $.post("/admin/user/updateVipState",{userId:this.value,isVip:obj.elem.checked},function (res) {
+               if(res.success == true){
+                   layer.msg("操作成功");
+               }else {
+                   layer.msg("操作失败");
+               }
+           });
+        });
+
+        //监听封禁操作
+        form.on('switch(isOff)',function (obj) {
+            $.post("/admin/user/updateUserState",{userId:this.value,isOff:obj.elem.checked},function (res) {
+                if(res.success == true){
+                    layer.msg("操作成功");
+                }else {
+                    layer.msg("操作失败");
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

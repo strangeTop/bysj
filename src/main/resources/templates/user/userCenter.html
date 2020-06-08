@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>个人中心--Java资源分享网</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="java知识源码分享，java基础教学，java学习教程，程序员源码下载网站,一个java程序员都知道的分享网站" />
+    <meta name="keywords" content="java,javafxw,java分享,java源码,java资源,java基础,java视频,java教程,java学习,java下载,java知识" />
+    <link rel="shortcut icon" href="/foreground/images/logomin.png" type="image/x-icon" />
+    <link rel="stylesheet" href="/foreground/layui/css/layui.css">
+    <link rel="stylesheet" href="/foreground/css/global.css">
+</head>
+<body>
+
+<div th:replace="common/header::#h"></div>
+
+<div class="layui-container fly-marginTop fly-user-main">
+    <div th:replace="common/left::#l"></div>
+    <div class="site-tree-mobile layui-hide">
+        <i class="layui-icon">&#xe602;</i>
+    </div>
+    <div class="site-mobile-shade"></div>
+
+    <div class="site-tree-mobile layui-hide">
+        <i class="layui-icon">&#xe602;</i>
+    </div>
+    <div class="site-mobile-shade"></div>
+
+    <div class="fly-panel fly-panel-user" pad20>
+        <div class="layui-tab layui-tab-brief" lay-filter="user">
+            <ul class="layui-tab-title" id="LAY_mine">
+                <li class="layui-this" lay-id="info">我的资料</li>
+                <li lay-id="avatar">头像</li>
+                <li lay-id="pass">密码</li>
+            </ul>
+            <div class="layui-tab-content" style="padding: 20px 0;">
+                <div id="info" class="layui-form layui-form-pane layui-tab-item layui-show">
+                    <form id="userForm" method="post">
+                        <div class="layui-form-item">
+                            <label for="userName" class="layui-form-label">账号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="userName" name="userName" autocomplete="off" disabled="" th:value="${currentUser.userName}" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label for="email" class="layui-form-label">邮箱</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="email" name="email" required lay-verify="email" disabled="" th:value="${currentUser.email}" autocomplete="off" class="layui-input">
+                            </div>
+                            <div class="layui-form-mid layui-word-aux">邮箱目前不可变更。</div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label for="nickname" class="layui-form-label">昵称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="nickname" name="nickname" required lay-verify="nickname" th:value="${currentUser.nickname}" autocomplete="off" class="layui-input">
+                            </div>
+                            <div class="layui-inline">
+                                <div th:if="${currentUser.sex == '男'}" class="layui-input-inline">
+                                    <input type="radio" name="sex" value="男" checked="" title="男">
+                                    <input type="radio" name="sex" value="女" title="女">
+                                </div>
+                                <div th:if="${currentUser.sex == '女'}" class="layui-input-inline">
+                                    <input type="radio" name="sex" value="男" title="男">
+                                    <input type="radio" name="sex" value="女" checked="" title="女">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <button id="tjan" class="layui-btn" key="set-mine" lay-filter="formDemo" lay-submit>确认修改</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="avatar" class="layui-form layui-form-pane layui-tab-item">
+                    <div class="layui-form-item">
+                        <div class="avatar-add">
+                            <p>建议尺寸168*168，支持jpg、png、gif，最大不能超过200KB</p>
+                            <button type="button" class="layui-btn upload-img" id="updateImg">
+                                <i class="layui-icon">&#xe67c;</i>更换头像
+                            </button>
+                            <img id="headPortrait" th:src="'/img/' + ${currentUser.headPortrait }">
+                            <span class="loading"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="pass" class="layui-form layui-form-pane layui-tab-item">
+                    <form id="passwordForm" method="post">
+                        <div class="layui-form-item">
+                            <label for="oldPassword" class="layui-form-label">当前密码</label>
+                            <div class="layui-input-inline">
+                                <input type="password" id="oldPassword" name="oldPassword" required lay-verify="pass" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label for="newPassword" class="layui-form-label">新密码</label>
+                            <div class="layui-input-inline">
+                                <input type="password" id="newPassword" name="newPassword" required lay-verify="pass" autocomplete="off" class="layui-input">
+                            </div>
+                            <div class="layui-form-mid layui-word-aux">6到18个字符</div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label for="newPassword2" class="layui-form-label">确认密码</label>
+                            <div class="layui-input-inline">
+                                <input type="password" id="newPassword2" name="newPassword2" required lay-verify="pass" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <button id="xgpassword" class="layui-btn" key="set-mine" lay-filter="updatePassword" lay-submit>确认修改</button>
+                        </div>
+                    </form>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div th:replace="common/footer.html::#f"></div>
+
+<script src="/js/jquery-1.8.3.min.js"></script>
+<script src="/foreground/layui/layui.js"></script>
+<script src="/foreground/layui/layui.all.js"></script>
+<script src="/js/index.js"></script>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    layui.form.verify({
+        //我们既支持上述函数式的方式，也支持下述数组的形式
+        //数组的两个值分别代表：[正则匹配、匹配不符时的提示文字]
+        pass: [
+            /^[\S]{6,18}$/
+            ,'密码必须6到18位，且不能出现空格'
+        ],
+        userName: [
+            /^[\S]{5,15}$/
+            ,'用户名必须5到15位，且不能出现空格'
+        ],
+        nickname: [
+            /^[\S]{1,10}$/
+            ,'昵称必须1到10位，且不能出现空格'
+        ]
+    });
+
+
+    layui.use(['form','upload'], function(){
+        var form = layui.form
+            ,$ = layui.jquery
+            ,upload = layui.upload;
+
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+            var url = '/user/userUpdate';
+            var data = $('#userForm').serializeArray();
+            $("#tjan").attr({"disabled":"disabled"});
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: data,
+                success: function (res) {
+                    if(res.success){
+                        layer.msg('修改成功！', {
+                            icon: 1,
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function(){
+                            location.reload();
+                        });
+                    }
+                    else{
+                        layer.msg("修改失败！", {
+                            icon: 5,
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function(){
+                            $("#tjan").removeAttr("disabled");
+                        });
+                    }
+                },
+                error: function(data) {
+                    layer.msg("网络错误！", {
+                        icon: 5,
+                        time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        $("#tjan").removeAttr("disabled");
+                    });
+                }
+            });
+            return false;
+        });
+
+        //普通图片上传
+        var uploadInst = upload.render({
+            elem: '#updateImg'
+            ,url: '/user/updateHeadPortrait'
+            ,before: function(obj){
+                //预读本地文件示例，不支持ie8
+                //obj.preview(function(index, file, result){
+                //    $('#demo1').attr('src', result); //图片链接（base64）
+                //});
+            }
+            ,exts: 'jpg|png|gif' //只允许上传文件后缀
+            ,size: 500 //限制文件大小，单位 KB
+            ,done: function(res){
+                //如果上传失败
+                if(res.success){
+                    $('#headPortrait').attr('src', "/img/" + res.imgName);
+                    $('#titleHeadPortrait').attr('src', "/img/" + res.imgName);
+                    layer.msg('修改成功！')
+                }else{
+                    return layer.msg('上传失败');
+                }
+                //上传成功
+            }
+            ,error: function(){
+                return layer.msg('上传失败');
+            }
+        });
+
+        //监听修改密码
+        form.on('submit(updatePassword)', function(data){
+            var newPassword = $("#newPassword").val();
+            var newPassword2 = $("#newPassword2").val();
+            if(newPassword != newPassword2){
+                layer.msg('两次密码不一致!');
+                return false;
+            }
+            var url = '/user/updatePassword';
+            var data = $('#passwordForm').serializeArray();
+            $("#xgpassword").attr({"disabled":"disabled"});
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: data,
+                success: function (res) {
+                    if(res.success){
+                        layer.msg('修改成功，下次登录生效！', {
+                            icon: 1,
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function(){
+                            $("#oldPassword").val("");
+                            $("#newPassword").val("");
+                            $("#newPassword2").val("");
+                            $("#xgpassword").removeAttr("disabled");
+                        });
+                    } else{
+                        layer.msg(res.errorInfo, {
+                            icon: 5,
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function(){
+                            $("#xgpassword").removeAttr("disabled");
+                        });
+                    }
+                },
+                error: function(data) {
+                    layer.msg("网络错误！", {
+                        icon: 5,
+                        time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        $("#xgpassword").removeAttr("disabled");
+                    });
+                }
+            });
+            return false;
+        });
+
+    });
+
+    //解除QQ绑定
+    function removeBind() {
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.confirm('确定要解除当前账号QQ绑定吗?', function(index){
+                //do something
+                $.post("/QQ/removeBind",{},function(result){
+                    if(result.success){
+                        layer.msg('解绑成功！', {
+                            icon: 6,
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function(){
+                            //do something
+                            location.reload();  // 刷新当前页
+                        });
+                    }else{
+                        layer.msg("解绑失败，请联系管理员！");
+                    }
+                },"json");
+                layer.close(index);
+            });
+        });
+    }
+
+    /*]]>*/
+</script>
+</body>
+</html>

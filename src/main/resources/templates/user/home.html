@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>我的主页--Java资源分享网</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="java知识源码分享，java基础教学，java学习教程，程序员源码下载网站,一个java程序员都知道的分享网站" />
+    <meta name="keywords" content="java,javafxw,java分享,java源码,java资源,java基础,java视频,java教程,java学习,java下载,java知识" />
+    <link rel="shortcut icon" href="/foreground/images/logomin.png" type="image/x-icon" />
+    <link rel="stylesheet" href="/foreground/layui/css/layui.css">
+    <link rel="stylesheet" href="/foreground/css/global.css">
+</head>
+<body>
+
+<div th:replace="common/header::#h"></div>
+
+<div class="fly-home fly-panel" style="background-image: url();">
+    <img id="headPortrait" th:src="'/img/' + ${session.currentUser.headPortrait}" th:alt="${session.currentUser.nickname}">
+    <i th:if="${session.currentUser.isVip == true}" class="iconfont icon-renzheng" title="会员认证"></i>
+    <h1>
+        <font th:text="${session.currentUser.nickname}"></font>
+        <i th:if="${session.currentUser.sex == '男'}" class="iconfont icon-nan"></i>
+        <i th:if="${session.currentUser.sex == '女'}" class="iconfont icon-nv"></i>
+        <i th:if="${session.currentUser.isVip == true}" class="layui-badge fly-badge-vip" th:text="'VIP' + ${session.currentUser.vipGrade}">VIP</i>
+
+    </h1>
+
+    <p class="fly-home-info">
+        <i class="iconfont icon-kiss" title="飞吻"></i><span onclick="jfcz()" style="color: #FF7200;cursor: pointer;" th:text="${session.currentUser.points} + ' 积分'"></span>
+        <i class="iconfont icon-shijian"></i><span th:text="${#dates.format(session.currentUser.registrationDate, 'yyyy-MM-dd')} + ' 加入'"></span>
+    </p>
+
+    <p class="fly-home-sign">（上传资源得积分呦）</p>
+
+    <div class="fly-sns" data-user="">
+        <a href="javascript:;" class="layui-btn layui-btn-primary fly-imActive" id="updateImg" data-type="addFriend">更换头像</a>
+        <a href="/user/toAddArticle" class="layui-btn layui-btn-normal fly-imActive" data-type="chat">上传资源</a>
+    </div>
+
+</div>
+
+<div class="layui-container">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md6 fly-home-jie">
+            <div class="fly-panel">
+                <h3 class="fly-panel-title">最近下载</h3>
+                <ul class="jie-row">
+                    <li th:each="userDownload : ${userDownloadList}">
+                        <span class="fly-jing" th:if="${userDownload.article.isHot}">热</span>
+                        <a th:href="@{'/article/detail/'+${userDownload.article.articleId}}" target="_blank" class="jie-title" th:text="${userDownload.article.name}"></a>
+                        <i th:text="${userDownload.downloadDate}"></i>
+                        <em class="layui-hide-xs" th:text="${userDownload.article.click} + '阅'"></em>
+                    </li>
+                    <div th:if="${userDownloadList == null}" class="fly-none" style="min-height: 50px; padding:30px 0; height:auto;"><i style="font-size:14px;">没有下载任何资源！</i></div>
+                </ul>
+            </div>
+        </div>
+
+        <div class="layui-col-md6 fly-home-da">
+            <div class="fly-panel">
+                <h3 class="fly-panel-title">系统消息</h3>
+                <ul class="home-jieda">
+                    <li th:each="message : ${messageList}">
+                        <p>
+                            <span th:text="${message.publishDate}"></span>
+                            <font th:utext="${message.content}"></font>
+                        </p>
+                        <div th:if="${message.cause != null &&message.cause != ''}" class="home-dacontent" th:text="'失败原因：' + ${message.cause}">
+                        </div>
+                    </li>
+
+                    <div th:if="${messageList == null}" class="fly-none" style="min-height: 50px; padding:30px 0; height:auto;"><span>没有任何消息！</span></div>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="common/footer.html::#f"></div>
+
+<script src="/js/jquery-1.8.3.min.js"></script>
+<script src="/foreground/layui/layui.js"></script>
+<script src="/js/index.js"></script>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    layui.use(['form','upload'], function(){
+        var form = layui.form
+            ,$ = layui.jquery
+            ,upload = layui.upload;
+
+        //普通图片上传
+        var uploadInst = upload.render({
+            elem: '#updateImg'
+            ,url: '/user/updateHeadPortrait'
+            ,before: function(obj){
+                //预读本地文件示例，不支持ie8
+                //obj.preview(function(index, file, result){
+                //    $('#demo1').attr('src', result); //图片链接（base64）
+                //});
+            }
+            ,exts: 'jpg|png|gif' //只允许上传文件后缀
+            ,size: 500 //限制文件大小，单位 KB
+            ,done: function(res){
+                //如果上传失败
+                if(res.success){
+                    //$('#headPortrait').attr('src', "/static/img/" + res.imgName);
+                    //$('#titleHeadPortrait').attr('src', "/static/img/" + res.imgName);
+                    layer.msg('修改成功！', {
+                        icon: 1,
+                        time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                        location.reload();
+                    });
+                }else{
+                    return layer.msg('上传失败！');
+                }
+                //上传成功
+            }
+            ,error: function(){
+                return layer.msg('网络错误！');
+            }
+        });
+    });
+
+    /*]]>*/
+</script>
+
+</body>
+</html>

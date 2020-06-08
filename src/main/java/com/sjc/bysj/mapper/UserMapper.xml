@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjc.bysj.mapper.UserMapper">
+        <resultMap id="UserMap" type="com.sjc.bysj.res.UserRes">
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="nickname" jdbcType="VARCHAR" property="nickname"/>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="head_portrait" jdbcType="VARCHAR" property="headPortrait"/>
+        <result column="sex" jdbcType="VARCHAR" property="sex"/>
+        <result column="points" jdbcType="INTEGER" property="points"/>
+        <result column="is_vip" jdbcType="BIT" property="isVip"/>
+        <result column="vip_grade" jdbcType="INTEGER" property="vipGrade"/>
+        <result column="is_off" jdbcType="BIT" property="isOff"/>
+        <result column="lately_login_time" jdbcType="DATE" property="latelyLoginTime"/>
+    </resultMap>
+    <select id="getCount" resultType="integer">
+        select count(1) from user
+        <if test="userName != null and userName != ''">
+            where user_name like concat('%',#{userName},'%')
+            or nickname like concat('%',#{userName},'%')
+        </if>
+
+    </select>
+
+    <select id="list" resultMap="UserMap">
+        select
+        user_id,
+        nickname,
+        user_name,
+        sex,
+        points,
+        email,
+        head_portrait,
+        is_vip,
+        lately_login_time,
+        is_off,
+        vip_grade
+        from user
+        <if test="userName != null and userName != ''">
+            where user_name like concat('%',#{userName},'%')
+            or nickname like concat('%',#{userName},'%')
+        </if>
+    </select>
+</mapper>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjc.bysj.mapper.ArticleMapper">
+    <resultMap id="ArticleMap" type="com.sjc.bysj.res.ArticleRes">
+        <result column="article_id" jdbcType="INTEGER" property="articleId"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="publish_date" jdbcType="DATE" property="publishDate"/>
+        <result column="points" jdbcType="INTEGER" property="points"/>
+        <result column="state" jdbcType="INTEGER" property="state"/>
+        <result column="click" jdbcType="INTEGER" property="click"/>
+        <result column="is_hot" jdbcType="BIT" property="isHot"/>
+        <result column="is_free" jdbcType="BIT" property="isFree"/>
+        <result column="reason" jdbcType="VARCHAR" property="reason"/>
+        <association property="user" javaType="com.sjc.bysj.entity.User">
+            <result column="nickname" jdbcType="VARCHAR" property="nickname"/>
+            <result column="head_portrait" jdbcType="VARCHAR" property="headPortrait"/>
+            <result column="vip_grade" jdbcType="INTEGER" property="vipGrade"/>
+            <result column="is_vip" jdbcType="BIT" property="isVip"/>
+        </association>
+        <association property="articleType" javaType="com.sjc.bysj.entity.ArticleType">
+            <result column="arc_type_name" jdbcType="VARCHAR" property="arcTypeName"/>
+        </association>
+    </resultMap>
+    <select id="list" resultMap="ArticleMap">
+        select
+        a.article_id,
+        a.name,
+        t.arc_type_name,
+        u.nickname,
+        u.head_portrait,
+        u.vip_grade,
+        u.is_vip,
+        a.publish_date,
+        a.points,
+        a.state,
+        a.is_hot,
+        a.is_free,
+        a.reason,
+        a.click
+        from article a
+        join arc_type t on a.arc_type_id=t.arc_type_id
+        join user u on u.user_id=a.user_id
+        <where>
+            <if test="userId != null and userId != ''">
+                and a.user_id=#{userId}
+            </if>
+            <if test="name != null and name != ''">
+                and a.name like concat('%',#{name},'%')
+            </if>
+            <if test="state != null and state != ''">
+                and a.state =#{state}
+            </if>
+            <if test="arcType != null and arcType != ''">
+                and a.arc_type_id =#{arcType}
+            </if>
+            <if test="start != null and start != ''">
+                and a.publish_date &gt;=#{start}
+            </if>
+            <if test="end != null and end != ''">
+                and a.publish_date &lt;=#{end}
+            </if>
+            <if test="'is_free'==field">
+                and a.is_free=1
+            </if>
+            <if test="searchWord != null and searchWord != ''">
+                and (a.keywords like concat('%',#{searchWord},'%')
+                     or a.description like concat('%',#{searchWord},'%')
+                     or a.name like concat('%',#{searchWord},'%'))
+            </if>
+        </where>
+        <if test="order != null and order != '' and field != null and field != ''">
+            order by a.${field} ${order}
+        </if>
+        <if test="order == null or order == '' or field == null or field == ''">
+            order by a.publish_date desc
+        </if>
+    limit #{page},#{pageSize}
+    </select>
+
+    <select id="getCount" resultType="integer">
+        select count(1) from article
+        <where>
+            <if test="userId != null and userId != ''">
+                and user_id=#{userId}
+            </if>
+            <if test="name != null and name != ''">
+                and name like concat('%',#{name},'%')
+            </if>
+            <if test="state != null and state != ''">
+                and state =#{state}
+            </if>
+            <if test="arcType != null and arcType != ''">
+                and arc_type_id =#{arcType}
+            </if>
+            <if test="start != null and start != ''">
+                and publish_date &gt;=#{start}
+            </if>
+            <if test="end != null and end != ''">
+                and publish_date &lt;=#{end}
+            </if>
+            <if test="'is_free'==field">
+                and is_free=1
+            </if>
+            <if test="searchWord != null and searchWord != ''">
+                and (keywords like concat('%',#{searchWord},'%')
+                or description like concat('%',#{searchWord},'%')
+                or name like concat('%',#{searchWord},'%'))
+            </if>
+        </where>
+    </select>
+</mapper>

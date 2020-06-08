@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Java资源分享网</title>
+    <link rel="shortcut icon" href="/foreground/images/logomin.png" type="image/x-icon"/>
+    <link rel="stylesheet" href="/foreground/layui/css/layui.css"/>
+    <link rel="stylesheet" href="/foreground/css/global.css"/>
+    <script src="/js/jquery-1.8.3.min.js"></script>
+    <script src="/layui/layui.js"></script>
+    <script src="/js/index.js"></script>
+</head>
+<body>
+<div th:replace="common/header.html::#h"></div>
+<div class="fly-panel fly-column" style="height: auto;">
+    <div class="layui-container">
+        <ul class="layui-clear" th:utext="${arcTypeStr}"></ul>
+    </div>
+</div>
+<div class="layui-container">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="fly-panel" style="margin-bottom: 0;border-radius:10px;padding-left: 10px;">
+                <a href="/buyVIP" style="color: red;line-height:30px;text-align:center;">欢迎上传资源，成为本站VIP，一起交流，共同进步，早日走上人生巅峰！</a>
+            </div>
+        </div>
+        <div class="layui-col-md8">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin-bottom: -20px;margin-top: -20px">
+                <ul class="layui-tab-title">
+                    <a th:href="@{'../publish_date/'+${href}}"><li th:class="${field.equals('publish_date')?'layui-this':''}">最新资源</li></a>
+                    <a th:href="@{'../click/'+${href}}"><li th:class="${field.equals('click')?'layui-this':''}">最热资源</li></a>
+                    <a th:href="@{'../is_free/'+${href}}"><li th:class="${field.equals('is_free')?'layui-this':''}">免费资源</li></a>
+                </ul>
+                <div class="layui-tab-content"></div>
+            </div>
+            <div class="fly-panel" style="margin-bottom: 0;">
+                <ul class="fly-list">
+                    <li th:each="article :${articleList}" th:if="${article.state==2}">
+                        <a class="fly-avatar">
+                            <img th:src="'/img/'+${article.user.headPortrait}" th:alt="${article.user.nickname}">
+                        </a>
+                        <h2>
+                            <a class="layui-badge" th:text="${article.articleType.arcTypeName}"></a>
+                            <a th:href="@{'/article/detail/'+${article.articleId}}" target="_blank" th:utext="${article.name}"></a>
+                        </h2>
+                        <div class="fly-list-info">
+                            <a>
+                                <cite th:text="${article.user.nickname}"></cite>
+                                <i th:if="${article.user.isVip == true}" class="iconfont icon-renzheng" title="认证信息：会员"></i>
+                                <i th:if="${article.user.isVip == true}" class="layui-badge fly-badge-vip" th:text="'VIP'+${article.user.vipGrade}">VIP</i>
+                            </a>
+                            <span th:text="${article.publishDate}"></span>
+                            <span th:if="!${article.isFree}" class="fly-list-kiss layui-hide-xs" title="积分">
+                                <i class="iconfont icon-kiss"></i>
+                                <span th:text="${article.points}"></span>
+                            </span>
+                            <span th:if="${article.isFree}" class="layui-badge fly-badge-accept layui-hide-xs">免费资源</span>
+                            <span class="fly-list-nums">
+                                <i class="iconfont" title="人气">&#xe60b;</i> <span th:text="${article.click}"></span>
+                            </span>
+                        </div>
+                        <div class="fly-list-badge">
+                            <span th:if="${article.isHot}" class="layui-badge layui-bg-red">热门</span>
+                        </div>
+                    </li>
+                </ul>
+                <div style="text-align: center;" th:utext="${pageStr}"></div>
+            </div>
+        </div>
+
+        <div class="layui-col-md4">
+            <div class="fly-panel" style="margin-top: 20px">
+                <form class="layui-form" action="?searchWord">
+                    <input type="text" style="width: 80%;display:inline;" th:value="${searchWord}" id="searchWord" name="searchWord" lay-filter="searchInput" lay-verify="required" required
+                           placeholder="输入关键词搜索" autocomplete="off" class="layui-input">
+                    <button class="layui-btn layui-btn-warm layui-btn-radius layui-btn-sm" lay-submit=""><i class="layui-icon">&#xe615;</i>搜索</button>
+                </form>
+            </div>
+
+
+            <dl class="fly-panel fly-list-one">
+                <dt class="fly-panel-title">最新发布</dt>
+                <dd th:each="article : ${newArticle}">
+                    <a th:href="@{'/article/detail/'+${article.articleId}}" target="_blank" th:text="${article.name}"></a>
+                    <span><i class="iconfont" title="人气">&#xe60b;</i><span th:text="${article.click}"></span> </span>
+                </dd>
+            </dl>
+
+            <dl class="fly-panel fly-list-one">
+                <dt class="fly-panel-title">热搜排行</dt>
+                <dd th:each="article : ${hotArticle}">
+                    <a th:href="@{'/article/detail/'+${article.articleId}}" target="_blank" th:text="${article.name}"></a>
+                    <span><i class="iconfont" title="人气">&#xe60b;</i><span th:text="${article.click}"></span> </span>
+                </dd>
+            </dl>
+
+            <div class="fly-panel fly-link">
+                <dt class="fly-panel-title">友情链接</dt>
+                <dl class="fly-panel-main">
+                    <dd >
+                        <a href="https://www.baidu.com" target="_blank" >百度</a><br/>
+                        <a href="https://www.csdn.net" target="_blank" >CSDN</a><br/>
+                        <a href="https://www.imooc.com" target="_blank" >慕课网</a>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="common/footer.html::#f"></div>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8"></meta>
+  <title>修改密码界面</title>
+  <link rel="stylesheet" href="/layui/css/layui.css"></link>
+  <script type="text/javascript" src="/fsLayui/plugins/jquery/jquery.min.js"></script>
+ </head>
+<body style="height: 300px;">
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+  <legend>修改密码</legend>
+</fieldset>
+
+	<form class="layui-form" action="/admin/user/modifyPassword" method="post" style="text-align: center;">
+		<div class="layui-form-item" style="margin-bottom: 5px;">
+			<label class="layui-form-label">旧&nbsp;&nbsp;密&nbsp;&nbsp;码</label>
+			<div class="layui-input-inline">
+				<input type="password" name="oldPassword" required=""
+					lay-verify="pass" placeholder="请输入旧密码" autocomplete="off"
+					class="layui-input" style="width: 280px;" />
+			</div>
+		</div>
+		
+		<div class="layui-form-item" style="margin-bottom: 5px;">
+			<label class="layui-form-label">新&nbsp;&nbsp;密&nbsp;&nbsp;码</label>
+			<div class="layui-input-inline">
+				<input type="password" name="newPassword" required=""
+					lay-verify="pass" placeholder="请输入新密码" autocomplete="off"
+					class="layui-input" style="width: 280px;" />
+			</div>
+		</div>
+		
+		 <div class="layui-form-item" style="text-align: center;margin-top: 15px;">
+			<button class="layui-btn layui-btn-normal layui-btn-radius" lay-submit="" lay-filter="checkForm" style="width: 300px;">修改</button>
+		</div>
+</form>
+    <!-- layui.js -->
+    <script src="/layui/layui.js"></script>
+      <script src="/layui/layui.all.js"></script>
+<script type="text/javascript">
+
+		layui.form.verify({
+		  //我们既支持上述函数式的方式，也支持下述数组的形式
+		  //数组的两个值分别代表：[正则匹配、匹配不符时的提示文字]
+		  pass: [
+		    /^[\S]{6,18}$/
+		    ,'密码必须6到18位，且不能出现空格'
+		  ] 
+		});      
+	
+		layui.use('form', function() {
+			var form = layui.form;
+	
+			//监听提交
+			form.on('submit(checkForm)', function(data) {
+				//layer.msg(JSON.stringify(data.field));
+				 var url = '/admin/user/modifyPassword';
+			        var data = $('form').serializeArray();
+			        $.ajax({
+			            type: "POST",
+			            url: url,
+			            data: data,
+			            success: function (res) {
+			                if(res.success){
+			                	layer.msg('密码修改成功，下次登录生效！', {
+			                		  icon: 1,
+			                		  time: 1000 //2秒关闭（如果不配置，默认是3秒）
+			                		}, function(){
+			                		  //do something
+					                	var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+					            		//parent.location.reload();
+					            		parent.layer.close(index); //再执行关闭 
+			                		});  
+			                }
+			                else{
+			                	layer.msg(res.errorInfo);
+			                }
+			            },
+			            error: function(data) {
+			            	layer.msg("网络错误！");
+			            }
+			        });
+				return false;
+			});
+		});
+		
+</script>
+	
+</body>
+</html>

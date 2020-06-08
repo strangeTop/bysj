@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Java资源分享网</title>
+    <link rel="shortcut icon" href="/foreground/images/logomin.png" type="image/x-icon"/>
+    <link rel="stylesheet" href="/foreground/layui/css/layui.css"/>
+    <link rel="stylesheet" href="/foreground/css/global.css"/>
+    <script src="/js/jquery-1.8.3.min.js"></script>
+    <script src="/layui/layui.js"></script>
+    <script src="/js/index.js"></script>
+    <script type="text/javascript" src="/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" src="/ueditor/ueditor.all.js"></script>
+    <script type="text/javascript" src="/ueditor/lang/zh-cn/zh-cn.js"></script>
+</head>
+<body>
+<div th:replace="common/header::#h"></div>
+
+<div class="layui-container fly-marginTop fly-user-main">
+    <div th:replace="common/left::#l"></div>
+    <div class="fly-panel fly-panel-user" pad20>
+        <div class="layui-form layui-form-pane">
+            <div class="layui-tab layui-tab-brief" lay-filter="user">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">发布新资源</li>
+                </ul>
+                <div class="layui-form layui-tab-content" id="LAY-ucm" style="padding: 20px 0;">
+                    <div class="layui-tab-item layui-show">
+                        <form action="" method="post">
+                            <div class="layui-row layui-col-space15 layui-form-item">
+                                <div class="layui-col-md9">
+                                    <label for="name" class="layui-form-label">名称</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" id="name" name="name" required lay-verify="required" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-col-md3">
+                                    <label class="layui-form-label">资源类型</label>
+                                    <div class="layui-input-block">
+                                        <select required lay-verify="required" name="arcType" lay-filter="column">
+                                            <option></option>
+                                            <option th:each="arcType:${articleTypeList}" th:value="${arcType.arcTypeId}" th:text="${arcType.arcTypeName}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-row layui-col-space15 layui-form-item">
+                                <div class="layui-col-md9">
+                                    <label for="download" class="layui-form-label">资源链接</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" id="download" name="download" required lay-verify="url" placeholder="请输入百度云分享链接" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-col-md3">
+                                    <label for="password" class="layui-form-label">密码</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" id="password" name="password" required lay-verify="pass" placeholder="资源密码" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label for="keywords" class="layui-form-label">关键字</label>
+                                    <div class="layui-input-inline" style="width: 400px;">
+                                        <input type="text" id="keywords" name="keywords" required lay-verify="required" autocomplete="off" class="layui-input">
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux">
+                                        网页搜索keywords，多以英文逗号分割，利于seo优化
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label for="description" class="layui-form-label">资源描述</label>
+                                    <div class="layui-input-inline" style="width: 400px;">
+                                        <input type="text" id="description" name="description" required lay-verify="required" autocomplete="off" class="layui-input">
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux">
+                                        网页搜索描述，利于seo优化
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="layui-form-item layui-form-text">
+                                <div class="layui-input-block">
+                                    <script name="content" id="editor" type="text/plain" style="width: 100%;height: 500px;"></script>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">所需积分</label>
+                                    <div class="layui-input-inline" style="width: 190px;">
+                                        <select name="points">
+                                            <option value="0">免费资源</option>
+                                            <option value="1">1个积分</option>
+                                            <option value="2">2个积分</option>
+                                            <option value="3">3个积分</option>
+                                            <option value="4">4个积分</option>
+                                            <option value="5">5个积分</option>
+                                            <option value="6">6个积分</option>
+                                            <option value="7">7个积分</option>
+                                            <option value="8">8个积分</option>
+                                            <option value="9">9个积分</option>
+                                            <option value="10">10个积分</option>
+                                        </select>
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux">
+                                        发布资源后无法修改
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <button id="tjan" class="layui-btn" lay-filter="addArticleForm" lay-submit>立即发布</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="common/footer::#f"></div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    $(function(){
+        var editor = UE.getEditor('editor', {
+            toolbars: [
+                [   'source', //源代码
+                    'undo', //撤销
+                    'redo', //重做
+                    'bold', //加粗
+                    'indent', //首行缩进
+                    'snapscreen', //截图
+                    'italic', //斜体
+                    'underline', //下划线
+                    'strikethrough', //删除线
+                    'subscript', //下标
+                    'fontborder', //字符边框
+                    'superscript', //上标
+                    'formatmatch', //格式刷
+                    'blockquote', //引用
+                    'pasteplain', //纯文本粘贴模式
+                    'selectall', //全选
+                    'preview', //预览
+                    'horizontal', //分隔线
+                    'removeformat', //清除格式
+                    'inserttable', //插入表格
+                    'time', //时间
+                    'date', //日期
+                    'unlink', //取消链接
+                    'insertrow', //前插入行
+                    'insertcol', //前插入列
+                    'mergeright', //右合并单元格
+                    'mergedown', //下合并单元格
+                    'deleterow', //删除行
+                    'deletecol', //删除列
+                    'splittorows', //拆分成行
+                    'splittocols', //拆分成列
+                    'splittocells', //完全拆分单元格
+                    'deletecaption', //删除表格标题
+                    'inserttitle', //插入标题
+                    'mergecells', //合并多个单元格
+                    'deletetable', //删除表格
+                    'cleardoc', //清空文档
+                    'insertparagraphbeforetable', //"表格前插入行"
+                    'insertcode', //代码语言
+                    'fontfamily', //字体
+                    'fontsize', //字号
+                    'paragraph', //段落格式
+                    'simpleupload', //单图上传
+                    'insertimage', //多图上传
+                    'edittable', //表格属性
+                    'edittd', //单元格属性
+                    'link', //超链接
+                    'emotion', //表情
+                    'spechars', //特殊字符
+                    'searchreplace', //查询替换
+                    'help', //帮助
+                    'justifyleft', //居左对齐
+                    'justifyright', //居右对齐
+                    'justifycenter', //居中对齐
+                    'justifyjustify', //两端对齐
+                    'forecolor', //字体颜色
+                    'backcolor', //背景色
+                    'insertorderedlist', //有序列表
+                    'insertunorderedlist', //无序列表
+                    'fullscreen', //全屏
+                    'directionalityltr', //从左向右输入
+                    'directionalityrtl', //从右向左输入
+                    'rowspacingtop', //段前距
+                    'rowspacingbottom', //段后距
+                    'pagebreak', //分页
+                    'insertframe', //插入Iframe
+                    'imagenone', //默认
+                    'imageleft', //左浮动
+                    'imageright', //右浮动
+                    'imagecenter', //居中
+                    'wordimage', //图片转存
+                    'lineheight', //行间距
+                    'edittip ', //编辑提示
+                    'customstyle', //自定义标题
+                    'autotypeset', //自动排版
+                    'touppercase', //字母大写
+                    'tolowercase', //字母小写
+                    'background', //背景
+                    'template', //模板
+                    'scrawl', //涂鸦
+                    'music', //音乐
+                    'drafts', // 从草稿箱加载
+                    'charts' // 图表
+                ]
+            ]
+        });
+        editor.ready(function(){
+            editor.setContent("这里是资源主体内容。（截图上传只支持部分浏览器，如：360安全浏览器等。）发布资源请手动去掉这段话，这只是提示信息！");
+        });
+    });
+
+    layui.use("form",function () {
+       var form = layui.form,layer = layui.layer;
+       layui.form.verify({
+          pass:[
+              /^[\S]{4,10}$/
+              ,'密码必须4到10位，且不能出现空格'
+          ]
+       });
+
+       //监听提交
+        form.on("submit(addArticleForm)",function (data) {
+            var _data = data.field;
+            var url = "/user/saveArticle";
+            var name = _data.name;
+            var arcTypeId = _data.arcType;
+            var download = _data.download;
+            var password = _data.password;
+            var keywords = _data.keywords;
+            var description = _data.description;
+            var content = UE.getEditor("editor").getContent();
+            var contentDelHTML = UE.getEditor("editor").getContentTxt();
+            if(contentDelHTML==null||contentDelHTML==""){
+                layer.msg("请输入资源的主题内容！");
+                return false;
+            }
+            var points = _data.points;
+            if(points>10){
+                layer.msg("积分设置的太多啦！");
+            }else{
+                $("#tjan").attr({"disabled":"disabled"});
+                var data = {name:name,arcTypeId:arcTypeId,download:download,password:password,keywords:keywords,description:description,content:content,points:points};
+                $.ajax({
+                    type:"POST",
+                    url:url,
+                    data:data,
+                    success:function (res) {
+                        if(res.success){
+                            layer.msg("发布成功",{
+                                icon:1,
+                                time:1000
+                            },function () {
+                                location.reload();
+                            });
+                        }else{
+                            layer.msg(res.errorInfo,{
+                                icon:5,
+                                time:2000
+                            },function () {
+                                $("#tjan").removeAttr("disabled");
+                            });
+                        }
+                    },
+                    error:function (data) {
+                        layer.msg("网络错误！",{
+                            icon:5,
+                            time:2000
+                        },function () {
+                            $("#tjan").removeAttr("disabled");
+                        });
+                    }
+                });
+            }
+            return false;
+        });
+    });
+    /*]]>*/
+</script>
+
+</body>
+</html>

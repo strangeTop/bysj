@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Java资源分享网</title>
+    <link rel="shortcut icon" href="/foreground/images/logomin.png" type="image/x-icon"/>
+    <link rel="stylesheet" href="/foreground/layui/css/layui.css"/>
+    <link rel="stylesheet" href="/foreground/css/global.css"/>
+    <script src="/js/jquery-1.8.3.min.js"></script>
+    <script src="/layui/layui.js"></script>
+    <script src="/js/index.js"></script>
+</head>
+<body>
+<div th:replace="common/header::#h"></div>
+
+<div class="layui-container fly-marginTop fly-user-main">
+    <div th:replace="common/left::#l"></div>
+    <div class="fly-panel fly-panel-user" pad20>
+        <div class="layui-tab layui-tab-brief" lay-filter="user">
+            <div class="layui-tab-content" style="padding:20px 0;">
+                <div class="layui-tab-item layui-show">
+                    <ul class="mine-view jie-row">
+                        <li th:each="message : ${messageList}">
+                            <p>
+                                <span th:text="${message.publishDate}"></span>
+                                <font th:utext="${message.content}"></font>
+                                <span style="color: #af0000" th:if="${message.cause!=null&&message.cause!=''}" th:text="'失败原因：'+${message.cause}">
+                            </span>
+                                <span style="background-color: #af0000" th:if="${!message.isSee()}" th:text="新消息">
+                            </span>
+                            </p>
+                        </li>
+                    </ul>
+                    <div style="text-align: center;" th:utext="${pageStr}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="common/footer::#f"></div>
+
+</body>
+</html>

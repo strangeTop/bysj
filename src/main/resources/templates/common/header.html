@@ -1,0 +1,56 @@
+<div class="fly-header layui-bg-black" id="h">
+    <div class="layui-container">
+        <a class="fly-logo" href="/">
+            <img src="/foreground/images/logo.png" style="width: 140px;height: 50px;" alt="Java攀登网">
+        </a>
+        <ul class="layui-nav fly-nav layui-hide-xs">
+            <li class="layui-nav-item">
+                <a href="/buyVIP"><i class="iconfont icon-kiss"></i>充值积分 </a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="/fbzyzjf"><i class="iconfont icon-jifen"></i>发布资源赚积分 </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- 未登录状态 -->
+    <ul th:if="${session.currentUser == null}" class="layui-nav fly-nav-user" style="margin-right: 400px;">
+        <li class="layui-nav-item">
+            <a class="iconfont icon-touxiang layui-hide-xs" href="javascript:login()"></a>
+        </li>
+        <li class="layui-nav-item">
+            <a href="javascript:login()">登录</a>
+        </li>
+        <li class="layui-nav-item">
+            <a href="javascript:register()">注册</a>
+        </li>
+    </ul>
+
+
+    <!-- 登录后的状态 -->
+    <ul th:if="${session.currentUser != null}" class="layui-nav fly-nav-user" style="margin-right: 400px;">
+        <li id="loginLi" class="layui-nav-item" style="height: 65px;">
+            <a class="fly-nav-avatar">
+                <cite class="layui-hide-xs" th:utext="${session.currentUser.nickname}">...</cite>
+                <i th:if="${session.currentUser.isVip==true}" class="iconfont icon-renzheng layui-hide-xs" title="会员认证"></i>
+                <i th:if="${session.currentUser.isVip==true}" class="layui-badge fly-badge-vip layui-hide-xs" th:text="'VIP'+${session.currentUser.vipGrade}">VIP</i>
+<!--                <span th:if="${session.unUsefulArticleCount > 0 || session.currentUser.messageCount > 0}" style="top: 28px;" class="layui-badge-dot"></span>-->
+                <img id="titleHeadPortrait" th:src="'/img/'+${session.currentUser.headPortrait}">
+            </a>
+
+            <dl class="layui-nav-child layui-anim layui-anim-scale" style="width:150px">
+                <dd><a href="/user/home"><i class="layui-icon" style="margin-left: 2px;font-size: 22px;">&#xe68e;</i>我的主页</a> </dd>
+                <dd><a href="/user/userCenter"><i class="layui-icon" style="margin-left: 2px;font-size: 22px;">&#xe612;</i>用户中心</a> </dd>
+                <dd><a href="/user/userMessage/1"><i class="iconfont icon-tongzhi" style="top: 4px;"></i>我的消息<span th:if="${session.messageCount > 0}" class="layui-badge" th:text="${session.messageCount}"></span>
+                </a></dd>
+                <dd><a href="/user/articleManage"><i class="layui-icon" style="margin-left: 2px;font-size: 22px;">&#xe620;</i>资源管理</a> </dd>
+                <dd><a href="/user/toHaveDownloaded/1"><i class="layui-icon" style="margin-left: 2px;font-size: 22px;">&#xe857;</i>已下载资源</a> </dd>
+                <hr style="margin: 5px 0;">
+                <dd><a href="/buyVIP"><i class="layui-icon" style="margin-left: 2px;font-size: 22px;">&#xe735;</i>升级为VIP</a> </dd>
+                <dd><a href="javascript:userLogout()" style="text-align: center;">退出</a> </dd>
+            </dl>
+        </li>
+
+    </ul>
+
+</div>

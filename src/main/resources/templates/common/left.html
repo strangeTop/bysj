@@ -1,0 +1,46 @@
+<ul class="layui-nav layui-nav-tree layui-inline" lay-filter="user" id="l">
+    <li class="layui-nav-item">
+        <a href="/user/home">
+            <i class="layui-icon">&#xe609;</i>
+            我的主页
+        </a>
+    </li>
+    <li class="layui-nav-item">
+        <a href="/user/toHaveDownloaded/1">
+            <i class="layui-icon">&#xe857;</i>
+            已下载资源
+        </a>
+    </li>
+    <li class="layui-nav-item">
+        <a href="/user/userCenter">
+            <i class="layui-icon">&#xe612;</i>
+            用户中心
+        </a>
+    </li>
+<!--    <li class="layui-nav-item">-->
+<!--        <a href="/user/toUnUsefulArticleManage">-->
+<!--            <i class="layui-icon">&#xe64f;</i>-->
+<!--            失效资源-->
+<!--            <span th:if="${session.unUsefulArticleCount > 0}" class="layui-badge" th:text="${session.unUsefulArticleCount}"></span>-->
+<!--        </a>-->
+<!--    </li>-->
+    <li class="layui-nav-item">
+        <a href="/user/toAddArticle">
+            <i class="layui-icon">&#xe681;</i>
+            发布资源
+        </a>
+    </li>
+    <li class="layui-nav-item">
+        <a href="/user/articleManage">
+            <i class="layui-icon">&#xe620;</i>
+            资源管理
+        </a>
+    </li>
+    <li class="layui-nav-item">
+        <a href="/user/userMessage/1">
+            <i class="layui-icon">&#xe611;</i>
+            我的消息
+            <span th:if="${session.messageCount > 0}" class="layui-badge" th:text="${session.messageCount}"></span>
+        </a>
+    </li>
+</ul>

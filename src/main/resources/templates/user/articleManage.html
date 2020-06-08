@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Java资源分享网</title>
+    <link rel="shortcut icon" href="/foreground/images/logomin.png" type="image/x-icon"/>
+    <link rel="stylesheet" href="/foreground/layui/css/layui.css"/>
+    <link rel="stylesheet" href="/foreground/css/global.css"/>
+    <script src="/js/jquery-1.8.3.min.js"></script>
+    <script src="/layui/layui.js"></script>
+    <script src="/js/index.js"></script>
+    <script src="/js/articleManage.js"></script>
+</head>
+<body>
+<div th:replace="common/header::#h"></div>
+
+<div class="layui-container fly-marginTop fly-user-main">
+    <div th:replace="common/left::#l"></div>
+    <div class="fly-panel fly-panel-user" pad20>
+        <div class="layui-tab layui-tab-brief" lay-filter="user">
+            <div class="layui-tab-content" style="padding: 20px 0;">
+                <div class="layui-tab-item layui-show">
+                    <div class="demoTable">
+                        资源名称：
+                        <div class="layui-inline">
+                            <input class="layui-input" id="name" autocomplete="off">
+                        </div>
+                        <div class="layui-inline layui-form">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">审核状态：</label>
+                                <div class="layui-input-inline">
+                                    <select id="state" name="state">
+                                        <option value="">请选择审核状态</option>
+                                        <option value="1">未审核</option>
+                                        <option value="2">审核通过</option>
+                                        <option value="3">审核未通过</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="layui-btn" data-type="reload">搜索</button>
+                    </div>
+                    <table class="layui-hide" id="test" lay-filter="test"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="common/footer::#f"></div>
+<script type="text/html" id="nameTpl">
+    <a href="/article/detail/{{d.articleId}}" target="_blank">{{d.name}}</a>
+</script>
+
+<script type="text/html" id="arcTypeTpl">
+    <span class="layui-badge layui-bg-green">{{d.articleType.arcTypeName}}</span>
+</script>
+
+<script type="text/html" id="pointsTpl">
+    {{d.points}}积分
+</script>
+
+<script type="text/html" id="stateTpl">
+    {{# if(d.state==1){ }}
+        <button class="layui-btn layui-btn-danger layui-btn-xs"><i class="layui-icon">&#xe642;</i> 待审核</button>
+    {{# } else if(d.state==2){ }}
+        <font color="blue">审核通过</font>
+    {{# } else if(d.state==3){ }}
+        <a href = "javascript:void(0);" onclick ="layer.alert('未通过原因:{{d.reason==null?'无':d.reason}}')"><font color="red">审核未通过</font></a>
+    {{# } }}
+</script>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon">&#xe642;</i>编辑</a>
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="del"><i class="layui-icon">&#xe640;</i>删除</a>
+</script>
+
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button onclick="toAddArticle()" class="layui-btn layui-btn-warm layui-btn-radius layui-btn-sm"><i class="layui-icon">&#xe681;</i>发布资源</button>
+        <font color="red">（1、鼠标点击红色“审核未通过”，能显示未通过原因；2、审核未通过的，请重新编辑帖子，然后提交审核。）</font>
+    </div>
+</script>
+
+</body>
+</html>

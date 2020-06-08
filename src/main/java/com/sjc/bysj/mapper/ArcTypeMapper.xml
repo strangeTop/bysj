@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjc.bysj.mapper.ArcTypeMapper">
+    <resultMap id="ArcTypeMap" type="com.sjc.bysj.entity.ArticleType">
+        <result column="arc_type_id" jdbcType="INTEGER" property="arcTypeId"/>
+        <result column="arc_type_name" jdbcType="VARCHAR" property="arcTypeName"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="sort" jdbcType="INTEGER" property="sort"/>
+    </resultMap>
+    <select id="getCount" resultType="integer">
+        select count(1) from arc_type
+    </select>
+
+    <select id="list" resultMap="ArcTypeMap">
+        select * from arc_type
+        <if test="order != null and order != ''">
+            order by ${field} ${order}
+        </if>
+        <if test="order == null or order == ''">
+            order by sort asc
+        </if>
+        <if test="page != null and page != ''">
+            limit #{page},#{pageSize}
+        </if>
+    </select>
+</mapper>

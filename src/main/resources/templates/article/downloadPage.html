@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Java资源分享网</title>
+    <link rel="shortcut icon" href="/foreground/images/logomin.png" type="image/x-icon"/>
+    <link rel="stylesheet" href="/foreground/layui/css/layui.css"/>
+    <script src="/js/jquery-1.8.3.min.js"></script>
+    <script src="/layui/layui.js"></script>
+</head>
+<body>
+    <div style="padding: 10px;padding-top: 30px; text-align: center;">
+        下载地址：<a th:href="${article.download}" target="_blank" th:text="${article.download}"></a>
+        <br/>
+        密码：<font color="red" th:text="${article.password}"></font>
+    </div>
+    <div style="text-align: center;margin-top: 40px;color: red;">本资源是网友分享，仅供学习和交流使用，请勿作它用！谢谢！</div>
+</body>
+</html>

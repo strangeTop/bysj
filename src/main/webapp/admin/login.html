@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" class="loginHtml">
+<head>
+    <meta charset="UTF-8">
+    <title>源码资源分享网-后台登录</title>
+    <link rel="stylesheet" href="/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="/css/login/public.css" media="all" />
+    <link rel="stylesheet" href="/css/login/jquery.toast.min.css" media="all" />
+</head>
+<body class="loginBody">
+<form class="layui-form" id="loginform" style="opacity: 0.9;">
+    <div class="login_face" style="text-align: center">
+        <img src="/img/tou.jpg"
+             class="userAvatar">
+    </div>
+    <div class="layui-form-item input-item">
+        <label for="userName">用户名</label>
+        <input type="text" placeholder="请输入用户名" autocomplete="off" id="userName" class="layui-input" name="userName" lay-verify="required" lay-verType="tips">
+    </div>
+    <div class="layui-form-item input-item">
+        <label for="password">密码</label> <input type="password" lay-verType="tips" name="password" placeholder="请输入密码" autocomplete="off" id="password" class="layui-input" lay-verify="required">
+    </div>
+    <div class="layui-form-item">
+        <button class="layui-btn layui-block" id="btn"
+                lay-filter="login" lay-submit>登录</button>
+    </div>
+</form>
+
+<script type="text/javascript" src="/js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="/layui/layui.js"></script>
+<script type="text/javascript" src="/js/login/jquery.toast.min.js"></script>
+<script type="text/javascript" src="/js/login/alert.js"></script>
+<script type="text/javascript" src="/js/login/v2.js"></script>
+<script type="text/javascript">
+
+    layui.use(['form','layer','jquery'],function(){
+        var form = layui.form,
+            layer = parent.layer === undefined ? layui.layer : top.layer;
+        //登录按钮
+        form.on("submit(login)",function(data){
+            var _this = $(data.elem);
+            _this.text("登录中...").attr("disabled","disabled").addClass("layui-btn-disabled");
+            $.ajax({
+                url:"/user/login",
+                type:'post',
+                dataType:'json'
+                ,data:$("form").serializeArray()
+                ,success:function(res){
+                    if(res.adminSuccess){
+                        toast('登录成功','Success',0);
+                        setTimeout(function(){
+                            window.location.href = "/toAdminUserCenterPage";
+                        },1000);
+                    }else{
+                        $("#btn").text("登录").removeClass('layui-btn-disabled').removeAttr('disabled');
+                        toast(res.adminErrorInfo,'登录失败',1);
+                    }
+                }
+                ,error:function(data){
+                    $("#btn").text("登录").removeClass('layui-btn-disabled').removeAttr('disabled');
+                    toast('连接超时，请稍后重试！','网络超时',1);
+                }
+            });
+            return false;
+        });
+        //表单输入效果
+        $(".loginBody .input-item").click(function(e){
+            e.stopPropagation();
+            $(this).addClass("layui-input-focus").find(".layui-input").focus();
+        });
+        $(".loginBody .layui-form-item .layui-input").focus(function(){
+            $(this).parent().addClass("layui-input-focus");
+        });
+        $(".loginBody .layui-form-item .layui-input").blur(function(){
+            $(this).parent().removeClass("layui-input-focus");
+            if($(this).val() != ''){
+                $(this).parent().addClass("layui-input-active");
+            }else{
+                $(this).parent().removeClass("layui-input-active");
+            }
+        })
+    });
+</script>
+<script type="text/javascript" src="/js/login/bg.js"></script>
+</body>
+</html>

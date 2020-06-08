@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjc.bysj.mapper.UserDownloadMapper">
+    <resultMap id="downloadMap" type="com.sjc.bysj.res.UserDownloadRes">
+        <result column="user_download_id" jdbcType="INTEGER" property="userDownloadId"/>
+        <result column="download_date" jdbcType="DATE" property="downloadDate"/>
+        <association property="article" javaType="com.sjc.bysj.entity.Article">
+            <result column="name" jdbcType="VARCHAR" property="name"/>
+            <result column="article_id" jdbcType="INTEGER" property="articleId"/>
+            <result column="click" jdbcType="INTEGER" property="click"/>
+            <result column="is_hot" jdbcType="BIT" property="isHot"/>
+        </association>
+    </resultMap>
+    <select id="list" resultMap="downloadMap">
+        select
+        d.user_download_id,
+        d.download_date,
+        a.name,
+        a.article_id,
+        a.click,
+        a.is_hot
+        from user_download d join article a
+        on d.article_id=a.article_id
+        where d.user_id=#{userId}
+        order by d.download_date desc
+        limit #{page},#{pageSize}
+    </select>
+
+    <select id="count" resultType="integer">
+        select count(1) from user_download
+        where user_id=#{userId}
+    </select>
+</mapper>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta content="text/html;charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta http-equiv ="Pragma" content = "no-cache"/>
+    <meta http-equiv="Cache-Control" content="no cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <script src="/fsLayui/scripts/pace.min.js"></script>
+    <link href="/fsLayui/css/pace-theme-flash.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/fsLayui/plugins/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="/fsLayui/css/fs.css" media="all"/>
+    <script type="text/javascript" src="/fsLayui/plugins/layui/layui.js"></script>
+    <script type="text/javascript" src="/fsLayui/plugins/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/fsLayui/plugins/frame/js/fsDict.js?v=1.5.0"></script>
+    <script type="text/javascript" src="/fsLayui/plugins/frame/js/fs.js?v=1.5.0"></script>
+    <script type="text/javascript" src="/fsLayui/plugins/frame/js/frame.js?v=1.5.0"></script>
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space1">
+        <div class="layui-col-md12">
+            <div class="layui-form-query">
+                <form class="layui-form" id="query_form">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-mid">资源名称：</label>
+                            <div class="layui-input-inline" style="width: 250px;">
+                                <input type="text" name="name" autocomplete="off" class="layui-input"/>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-mid">资源类型：</label>
+                            <div class="layui-input-inline" style="width: 250px;">
+                                <select name="arcType" lay-verify="required" lay-verType="tips" class="fsSelect" addNull="1" dict="arcType"></select>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-mid">发布时间：</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="publishDates" autocomplete="off" class="layui-input fsDate" dateRange="1" placeholder="-"/>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-mid">审核状态：</label>
+                            <div class="layui-input-inline" style="width: 150px;">
+                                <select name="state" lay-verify="required">
+                                    <option value="">请选择审核状态</option>
+                                    <option value="1">未审核</option>
+                                    <option value="2">审核通过</option>
+                                    <option value="3">审核未通过</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <button class="layui-btn" type="button" function="query"><i class="layui-icon">&#xe615;</i>查询</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="layui-col-md12">
+            <div class="layui-row grid-demo">
+                <div class="layui-col-md6">
+                    <button class="layui-btn layui-btn-danger" function="submit" url="/admin/article/delete" isMutiDml="1" isConfirm="1"
+                            confirmMsg="是否确定删除选中的数据？" inputs="articleId:"><i class="layui-icon">&#xe640;</i>批量删除</button>
+                    <button class="layui-btn" function="refresh"><i class="layui-icon">&#x1002;</i>刷新</button>
+                </div>
+                <div class="layui-col-md12">
+                    <table id="fsDatagrid" lay-filter="fsDatagrid" class="fsDatagrid" isLoad="1" url="/admin/article/list" isPage="1" defaultForm="query_form" height="full-135"></table>
+                    <div class="fsDatagridCols">
+                        <p type="numbers" title="序号"/>
+                        <p checkbox="true"/>
+                        <p field="name" title="资源名称" templet="#nameTpl"/>
+                        <p field="articleType" align="center" title="资源类型" templet="#arcTypeTpl"/>
+                        <p field="user" align="center" title="发布者" templet="#userTpl"/>
+                        <p field="points" align="center" title="积分" templet="#pointsTpl" sort="true"/>
+                        <p field="publishDate" align="center" title="发布时间" sort="true"/>
+                        <p field="state" align="center" title="审核状态" templet="#stateTpl"/>
+                        <p field="isHot" align="center" title="热门资源？" templet="#isHotTpl"/>
+                        <p field="isFree" align="center" title="免费资源？" templet="#isFreeTpl"/>
+                        <p fixed="right" align="center" toolbar="#barDemo" title="操作"/>
+                    </div>
+                    <script type="text/html" id="nameTpl">
+                        <a target="_blank" >{{d.name}}</a>
+                    </script>
+                    <script type="text/html" id="arcTypeTpl">
+                        <span class="layui-badge layui-bg-green">{{d.articleType.arcTypeName}}</span>
+                    </script>
+                    <script type="text/html" id="userTpl">
+                        <img src="/img/{{d.user.headPortrait}}" class="layui-nav-img"/>{{d.user.nickname}}
+                    </script>
+                    <script type="text/html" id="pointsTpl">
+                        {{d.points}}积分
+                    </script>
+                    <script type="text/html" id="stateTpl">
+                        {{# if(d.state==1){ }}
+                        <button class="layui-btn layui-btn-danger layui-btn-xs"
+                            lay-event="top" topUrl="/admin/article/audit.html" topMode="edit" topWidth="1600px" topHeight="900px" topTitle="审核资源" inputs="articleId:">
+                            <i class="layui-icon">&#xe642;</i> 待审核</button>
+                        {{# } else if(d.state==2){ }}
+                        <font color="blue">审核通过</font>
+                        {{# } else if(d.state==3){ }}
+                        <a href="#" title="审核未通过原因：{{d.reason}}"><font color="red">审核未通过</font></a>
+                        {{# } }}
+                    </script>
+                    <script type="text/html" id="isHotTpl">
+                        <input type="checkbox" disabled="disabled" name="isHot" value="{{d.articleId}}" lay-skin="switch" lay-text="是|否" lay-filter="isHot"  {{d.isHot == true?'checked':''}}>
+                    </script>
+                    <script type="text/html" id="isFreeTpl">
+                        <input type="checkbox" disabled="disabled" name="isFree" value="{{d.articleId}}" lay-skin="switch" lay-text="是|否" lay-filter="isFree"  {{d.isFree == true?'checked':''}}>
+                    </script>
+                    <script type="text/html" id="barDemo">
+                        <a class="layui-btn layui-btn-green layui-btn-xs" lay-event="top" topUrl="/admin/article/one.html" topWidth="1600px" topHeight="900px"
+                           topTitle="查看资源" inputs="articleId:"><i class="layui-icon">&#xe615;</i>查看</a>
+                        <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="submit" url="/admin/article/delete" isConfirm="1" confirmMsg="是否确定删除当前记录？" inputs="articleId:">
+                            <i class="layui-icon">&#xe640;</i>删除</a>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use('table',function () {
+        var table = layui.table,form = layui.form;
+        //监听热门资源操作
+        form.on('switch(isHot)',function (obj) {
+            $.post("/admin/article/updateHotState",{articleId:this.value,isHot:obj.elem.checked},function (res) {
+                if(res.success==true){
+                    layer.msg("操作成功");
+                }else{
+                    layer.msg("操作失败");
+                }
+            });
+        });
+
+        //监听免费资源操作
+        form.on('switch(isFree)',function (obj) {
+            $.post("/admin/article/updateFreeState",{articleId:this.value,isFree:obj.elem.checked},function (res) {
+                if(res.success==true){
+                    layer.msg("操作成功");
+                }else{
+                    layer.msg("操作失败");
+                }
+            });
+        });
+    });
+
+    /**
+     * 生成全部索引
+     */
+    function genAllIndex(){
+        layer.confirm("您确定要重新生成所有帖子的索引吗？<br/>（如需生成，请先删除原来的帖子索引）",{
+            title:"系统提示",
+            btn:['确定','取消']
+        },function () {
+            layer.closeAll('dialog');
+            layer.load(1,{
+                shade:[0.1,'#fff']          //0.1透明度的白色背景
+            });
+            $.post("/admin/article/genAllIndex",{},function (result) {
+                if(result){
+                    layer.closeAll("loading");
+                    layer.msg("生成成功！");
+                }else{
+                    layer.msg("生成失败，请联系管理员！");
+                }
+            },"json");
+        },function () {
+            
+        });
+    }
+</script>
+</body>
+</html>

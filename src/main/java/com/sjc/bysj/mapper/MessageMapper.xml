@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjc.bysj.mapper.MessageMapper">
+    <resultMap id="messageMap" type="com.sjc.bysj.res.MessageRes">
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="cause" jdbcType="VARCHAR" property="cause"/>
+        <result column="publish_date" jdbcType="DATE" property="publishDate"/>
+        <result column="is_see" jdbcType="BIT" property="isSee"/>
+    </resultMap>
+    <select id="list" resultMap="messageMap">
+        select
+        content,
+        cause,
+        publish_date,
+        is_see
+        from message
+        where user_id=#{userId}
+        order by publish_date desc
+        limit #{page},#{pageSize}
+    </select>
+
+    <select id="getMessageCount" resultType="integer">
+        select count(1) from message
+        where user_id=#{userId} and is_see=0
+    </select>
+
+    <select id="count" resultType="integer">
+        select count(1) from message
+        where user_id=#{userId}
+    </select>
+</mapper>
